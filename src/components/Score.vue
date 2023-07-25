@@ -51,9 +51,27 @@ h1 {
   font-size: 0.75rem;
   font-weight: 700;
   color: var(--scoreText);
+  letter-spacing: 1.1px;
 }
 .score h2 {
   font-size: 2rem;
   color: var(--darkText);
+}
+
+@media screen and (min-width: 768px) {
+  .score-wrapper {
+    max-width: 720px;
+    margin: 0 auto;
+    padding: 1rem;
+  }
+  h1 {
+    font-size: 2rem;
+  }
+  .score {
+    padding-inline: 1.75rem;
+  }
+  .score h2 {
+    font-size: 2.5rem;
+  }
 }
 </style>

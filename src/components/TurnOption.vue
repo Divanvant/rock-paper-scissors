@@ -50,4 +50,13 @@ defineEmits(["turnSelected"]);
   height: 100%;
   background-color: white;
 }
+
+@media screen and (min-width: 768px) {
+  .turn-option {
+    width: 12.5rem;
+  }
+  .turn-option img {
+    width: 4.5rem;
+  }
+}
 </style>

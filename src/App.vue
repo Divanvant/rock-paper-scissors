@@ -121,7 +121,8 @@ const onNewTurn = () => {
   background-position: center 75%;
   background-size: 75%;
   padding: 2rem 0;
-  margin-top: 33%;
+  margin: 33% auto 0;
+  max-width: 480px;
 }
 .turn-option-wrapper {
   flex: 0 0 50%;
@@ -140,7 +141,8 @@ const onNewTurn = () => {
   flex-flow: row wrap;
   justify-content: space-between;
   padding: 2rem 0;
-  margin-top: 33%;
+  margin: 33% auto 0;
+  max-width: 360px;
 }
 .turn-details-item {
   text-align: center;
@@ -166,5 +168,38 @@ const onNewTurn = () => {
   padding-inline: 2.75rem;
   background: white;
   color: var(--darkText);
+}
+
+@media screen and (min-width: 768px) {
+  .page-content {
+    min-height: calc(100dvh - 108px - 3rem);
+  }
+
+  .turn-options-wrapper {
+    margin: 10% auto 0;
+  }
+  .turn-details-wrapper {
+    margin: 10% auto 0;
+    max-width: none;
+    align-items: center;
+  }
+  .turn-details-item {
+    display: flex;
+    flex-direction: column-reverse;
+  }
+  .turn-details-item h3 {
+    margin-block-end: 2rem;
+  }
+  .turn-details-main {
+    width: max-content;
+    order: 2;
+    margin-inline: 2rem;
+  }
+  .turn-details-item:nth-child(1) {
+    order: 1;
+  }
+  .turn-details-item:nth-child(2) {
+    order: 3;
+  }
 }
 </style>

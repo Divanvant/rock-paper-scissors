@@ -17,14 +17,18 @@ const toggleRulesModal = () => {
   <div class="rules-section">
     <Button @click="toggleRulesModal" class="btn-white-outlined">Rules</Button>
 
-    <div v-show="showRulesModal" class="rules-modal">
-      <h2>Rules</h2>
+    <div v-show="showRulesModal" class="rules-modal-wrapper">
+      <div class="rules-modal">
+        <div>
+          <h2>Rules</h2>
+        </div>
 
-      <img :src="rules" alt="Rules of the game" />
+        <img :src="rules" alt="Rules of the game" />
 
-      <Button @click="toggleRulesModal">
-        <img :src="closeIcon" alt="Close Icon" />
-      </Button>
+        <Button class="close-button" @click="toggleRulesModal">
+          <img :src="closeIcon" alt="Close Icon" />
+        </Button>
+      </div>
     </div>
   </div>
 </template>
@@ -34,6 +38,10 @@ const toggleRulesModal = () => {
   display: flex;
   align-items: center;
   justify-content: center;
+}
+
+.rules-modal-wrapper {
+  z-index: 9;
 }
 
 .rules-modal {
@@ -49,9 +57,41 @@ const toggleRulesModal = () => {
   padding-block: 2rem;
 }
 .rules-modal h2 {
+  line-height: 1;
   text-transform: uppercase;
 }
 .rules-modal button {
   background: transparent;
+}
+
+@media screen and (min-width: 768px) {
+  .rules-section {
+    justify-content: flex-end;
+  }
+  .rules-modal {
+    width: 400px;
+    height: 400px;
+    inset: 50% auto auto 50%;
+    transform: translate(-50%, -50%);
+    padding: 2rem;
+    text-align: left;
+    align-items: flex-start;
+    border-radius: 0.25rem;
+  }
+  .rules-modal-wrapper {
+    position: fixed;
+    inset: 0;
+    background-color: hsla(0, 0%, 0%, 0.4);
+  }
+
+  .rules-modal img {
+    margin: 0 auto;
+  }
+
+  .close-button {
+    position: absolute;
+    inset: 2rem 2rem auto auto;
+    padding: 0;
+  }
 }
 </style>
