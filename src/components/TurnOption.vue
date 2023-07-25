@@ -21,8 +21,6 @@ defineEmits(["turnSelected"]);
 
 <style scoped>
 .turn-option {
-  border: none;
-  outline: none;
   border-radius: 50%;
   background: linear-gradient(hsl(214, 47%, 23%), hsl(237, 49%, 15%));
   width: 8rem;

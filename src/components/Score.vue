@@ -45,6 +45,7 @@ h1 {
   background-color: white;
   line-height: 1;
   border-radius: 0.25rem;
+  text-align: center;
 }
 .score:not(h2) {
   font-size: 0.75rem;
