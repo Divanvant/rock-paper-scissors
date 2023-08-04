@@ -1,9 +1,10 @@
 <script setup lang="ts">
 type TScoreProps = {
-  score: number;
-};
+  loading: boolean
+  score: number
+}
 
-defineProps<TScoreProps>();
+defineProps<TScoreProps>()
 </script>
 
 <template>
@@ -17,7 +18,8 @@ defineProps<TScoreProps>();
     </div>
     <div class="score">
       <p>Score</p>
-      <h2>{{ score }}</h2>
+      <h2 v-if="!loading">{{ score }}</h2>
+      <h2 v-else>...</h2>
     </div>
   </div>
 </template>

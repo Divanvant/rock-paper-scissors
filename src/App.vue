@@ -1,76 +1,103 @@
 <script setup lang="ts">
-import { ref } from "vue";
-import Score from "./components/Score.vue";
-import Rules from "./components/Rules.vue";
-import Button from "./components/Button.vue";
-import TurnOption, { TTurnOption } from "./components/TurnOption.vue";
+import { ref } from 'vue'
+import Score from './components/Score.vue'
+import Rules from './components/Rules.vue'
+import Button from './components/Button.vue'
+import TurnOption, { TTurnOption } from './components/TurnOption.vue'
 
-import paperIcon from "./assets/images/icon-paper.svg";
-import scissorsIcon from "./assets/images/icon-scissors.svg";
-import rockIcon from "./assets/images/icon-rock.svg";
+import paperIcon from './assets/images/icon-paper.svg'
+import scissorsIcon from './assets/images/icon-scissors.svg'
+import rockIcon from './assets/images/icon-rock.svg'
 
-export type Move = "rock" | "paper" | "scissors";
+export type Move = 'rock' | 'paper' | 'scissors'
 
-const score = ref(0);
-const userPlayed = ref<Move | null>(null);
-const computerPlayed = ref<Move | null>(null);
-const result = ref<string>("none");
+const score = ref(0)
+const userPlayed = ref<Move | null>(null)
+const computerPlayed = ref<Move | null>(null)
+const result = ref<string>('none')
+const loadingResult = ref(false)
 
 const options = [
-  { name: "paper", color: "hsl(230, 89%, 62%)", icon: paperIcon },
-  { name: "scissors", color: "hsl(39, 89%, 49%)", icon: scissorsIcon },
-  { name: "rock", color: "hsl(349, 71%, 52%)", icon: rockIcon },
-] as TTurnOption[];
+  { name: 'paper', icon: paperIcon },
+  { name: 'scissors', icon: scissorsIcon },
+  { name: 'rock', icon: rockIcon },
+] as TTurnOption[]
 
 const getOption = (name: string) => {
-  const foundItem = options.filter((item) => item.name === name);
-
-  return foundItem[0];
-};
+  const foundItem = options.filter((item) => item.name === name)
+  return foundItem[0]
+}
 
 const getHouseTurn = () => {
-  const houseSelectionIndex = Math.floor(Math.random() * options.length);
-  return options[houseSelectionIndex].name;
-};
+  const houseSelectionIndex = Math.floor(Math.random() * options.length)
+  return options[houseSelectionIndex].name
+}
 
-const getResult = (userInput: Move) => {
-  const computerMove = getHouseTurn();
+const getResult = () => {
+  const computerMove = getHouseTurn()
+  computerPlayed.value = computerMove
 
-  userPlayed.value = userInput;
-  computerPlayed.value = computerMove;
-
-  if (userInput === computerMove) {
-    return "draw";
+  if (userPlayed.value === computerMove) {
+    return 'draw'
   }
 
   if (
-    (userInput === "rock" && computerMove === "scissors") ||
-    (userInput === "paper" && computerMove === "rock") ||
-    (userInput === "scissors" && computerMove === "paper")
+    (userPlayed.value === 'rock' && computerMove === 'scissors') ||
+    (userPlayed.value === 'paper' && computerMove === 'rock') ||
+    (userPlayed.value === 'scissors' && computerMove === 'paper')
   ) {
-    score.value = score.value += 1;
-    return "win";
+    score.value = score.value += 1
+    return 'win'
   }
 
-  return "lose";
-};
+  score.value = score.value -= 1
+  return 'lose'
+}
 
 const onUsersTurn = (selectedOption: Move) => {
-  result.value = getResult(selectedOption);
-};
+  loadingResult.value = true
+  userPlayed.value = selectedOption
+  result.value = getResult()
+  setTimeout(() => {
+    loadingResult.value = false
+  }, 1500)
+}
 
 const onNewTurn = () => {
-  userPlayed.value = null;
-  computerPlayed.value = null;
-  result.value = "none";
-};
+  userPlayed.value = null
+  computerPlayed.value = null
+  result.value = 'none'
+}
 </script>
 
 <template>
-  <Score :score="score" />
+  <Score :loading="loadingResult" :score="score" />
 
   <div class="page-content">
-    <div v-if="result === 'none'" class="turn-options-wrapper">
+    <div v-if="userPlayed && computerPlayed" class="turn-details-wrapper">
+      <div class="turn-details-item">
+        <TurnOption v-bind="getOption(userPlayed)" />
+        <h3>You picked</h3>
+      </div>
+      <div class="turn-details-item">
+        <TurnOption
+          v-bind="{
+            ...getOption(computerPlayed),
+            loading: loadingResult,
+          }"
+        />
+        <h3>The house picked</h3>
+      </div>
+
+      <transition>
+        <div v-if="!loadingResult" class="turn-details-main">
+          <h2>You {{ result }}</h2>
+          <Button @click="onNewTurn">Play again</Button>
+        </div>
+      </transition>
+    </div>
+
+    <div v-else class="turn-options-wrapper">
       <div
         class="turn-option-wrapper"
         v-for="option in options"
@@ -79,28 +106,7 @@ const onNewTurn = () => {
         <TurnOption v-bind="option" @turnSelected="onUsersTurn(option.name)" />
       </div>
     </div>
-
-    <div v-else class="turn-details-wrapper">
-      <template v-if="userPlayed && computerPlayed">
-        <div class="turn-details-item">
-          <TurnOption v-bind="getOption(userPlayed)" />
-          <h3>You picked</h3>
-        </div>
-        <div class="turn-details-item">
-          <TurnOption v-bind="getOption(computerPlayed)" />
-          <h3>The house picked</h3>
-        </div>
-      </template>
-
-      <div class="turn-details-main">
-        <h2>You {{ result }}</h2>
-        <Button @click="onNewTurn">Play again</Button>
-      </div>
-    </div>
-
-    <div>
-      <Rules />
-    </div>
+    <Rules />
   </div>
 </template>
 
@@ -116,7 +122,7 @@ const onNewTurn = () => {
   display: flex;
   flex-flow: row wrap;
   justify-content: center;
-  background-image: url("./assets/images/bg-triangle.svg");
+  background-image: url('./assets/images/bg-triangle.svg');
   background-repeat: no-repeat;
   background-position: center 75%;
   background-size: 75%;
@@ -147,6 +153,7 @@ const onNewTurn = () => {
 .turn-details-item {
   text-align: center;
   text-transform: uppercase;
+  margin: 0 2rem;
 }
 .turn-details-item h3 {
   margin-block-start: 1.5rem;
@@ -200,6 +207,24 @@ const onNewTurn = () => {
   }
   .turn-details-item:nth-child(2) {
     order: 3;
+  }
+}
+
+.bounce-enter-active {
+  animation: bounce-in 0.5s;
+}
+.bounce-leave-active {
+  animation: bounce-in 0.5s reverse;
+}
+@keyframes bounce-in {
+  0% {
+    transform: scale(0);
+  }
+  50% {
+    transform: scale(1.25);
+  }
+  100% {
+    transform: scale(1);
   }
 }
 </style>
